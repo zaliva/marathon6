@@ -40,15 +40,20 @@ class ViewController: UIViewController {
         let distance = sqrt(pow(point.x - squareView.center.x, 2) + pow(point.y - squareView.center.y, 2))
         let duration = min(0.3 + Double(distance) * 0.002, 1.5)
 
+        let angle = atan2(point.y - squareView.center.y, point.x - squareView.center.x)
+        let rotation = CGAffineTransform(rotationAngle: angle)
+
         animator = UIViewPropertyAnimator(duration: duration, dampingRatio: 0.6) {
-            let angle = atan2(point.y - self.squareView.center.y, point.x - self.squareView.center.x)
-            let rotation = CGAffineTransform(rotationAngle: angle)
             self.squareView.transform = rotation
             self.squareView.center = point
         }
         animator?.startAnimation()
-    }
 
+        UIView.animate(withDuration: duration/2, delay: 0, options: [.curveEaseInOut], animations: {
+            self.squareView.transform = .identity
+        })
+    }
+    
     private func stopAnimation() {
         animator?.stopAnimation(true)
         animator = nil
